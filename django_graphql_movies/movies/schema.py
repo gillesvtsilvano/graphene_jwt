@@ -15,15 +15,15 @@ class MovieType(DjangoObjectType):
 class Query(ObjectType):
     actor = graphene.Field(ActorType, id=graphene.Int())
     movie = graphene.Field(MovieType, id=graphene.Int())
-    actors = graphene.List(ActorType)
+    actors = graphene.List(ActorType, token=graphene.String(required=True))
     movies = graphene.List(MovieType)
 
     def resolve_actor(self, info, **kwargs):
         id = kwargs.get('id')
-        #user = info.context.user
+        user = info.context.user
 
-        #if not user.is_authenticated:
-        #    return None
+        if not user.is_authenticated:
+            return None
 
         if id is not None:
             return Actor.objects.get(pk=id)
